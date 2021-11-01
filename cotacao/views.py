@@ -33,11 +33,11 @@ def home(request):
 
             dados = json.loads(data)
 
-            euro = Rate.objects.create(nome ='euro', cotacao = dados['rates']['EUR'], data = dados['date'])
+            euro = Rate.objects.create(nome ='euro', cotacao = dados['rates']['EUR'], data = dataBusca)
 
-            real = Rate.objects.create(nome ='real', cotacao = dados['rates']['BRL'], data = dados['date'])
+            real = Rate.objects.create(nome ='real', cotacao = dados['rates']['BRL'], data = dataBusca)
 
-            iene = Rate.objects.create(nome ='iene', cotacao = dados['rates']['JPY'], data = dados['date'])
+            iene = Rate.objects.create(nome ='iene', cotacao = dados['rates']['JPY'], data = dataBusca)
 
             euro.save()
 
