@@ -1,0 +1,1 @@
+web: gunicorn pythonDolarCotacao.wsgi --log-file -

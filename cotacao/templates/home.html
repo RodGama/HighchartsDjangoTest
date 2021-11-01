@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cotacao Dolar</title>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+</head>
+<body>
+
+<div id="container" style="width:100%; height:400px;"></div>
+
+<script>
+  var seriesOptions = [];
+
+  let cotacoesEuro = [ 
+             {% for cotacao in cotacoesEuro %}
+             [ {{ cotacao.timestamp|date:"U" }}000 , {{cotacao.cotacao}} ]
+             ,
+             {% endfor %}
+             ];
+
+  let cotacoesReal = [ 
+             {% for cotacao in cotacoesReal %}
+             [ {{cotacao.timestamp|date:"U"}}000, {{cotacao.cotacao}} ]
+             ,
+             {% endfor %}
+             ];
+
+  let cotacoesIene = [ 
+             {% for cotacao in cotacoesIene %}
+             [ {{cotacao.timestamp|date:"U"}}000 , {{cotacao.cotacao}} ]
+             ,
+             {% endfor %}
+             ];
+
+  function createChart() {
+      
+    Highcharts.stockChart('container', {
+
+        rangeSelector: {
+            selected: 2
+        },
+
+        yAxis: {
+            labels: {
+                formatter: function () {
+                    return (this.value > 0 ? ' + ' : '') + this.value + '%';
+                }
+            },
+            plotLines: [{
+                value: 0,
+                width: 3,
+                color: 'silver'
+            }]
+        },
+
+        plotOptions: {
+            series: {
+                compare: 'percent'
+            }
+        },
+
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+            valueDecimals: 3,
+            split: true
+        },
+
+        series: seriesOptions
+    });
+}
+
+function success(_cotacoesEuro, _cotacoesIene, _cotacoesReal) {
+
+  seriesEuro = {name: 'Euro', data: _cotacoesEuro };
+  seriesIene = {name: 'Iene', data: _cotacoesIene };
+  seriesReal = {name: 'Real', data: _cotacoesReal };
+  seriesOptions.push(seriesEuro)
+  seriesOptions.push(seriesIene)
+  seriesOptions.push(seriesReal)
+
+
+  createChart();
+}
+
+success(cotacoesEuro, cotacoesIene, cotacoesReal);
+</script>
+
+</body>
+</html>
